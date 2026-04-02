@@ -2,14 +2,15 @@
 const toggle = document.getElementById('navToggle');
 const navLinks = document.getElementById('navLinks');
 
-toggle.addEventListener('click', () => {
-  navLinks.classList.toggle('open');
-});
+if (toggle && navLinks) {
+  toggle.addEventListener('click', () => {
+    navLinks.classList.toggle('open');
+  });
 
-// Close nav on link click (mobile)
-navLinks.querySelectorAll('a').forEach(link => {
-  link.addEventListener('click', () => navLinks.classList.remove('open'));
-});
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => navLinks.classList.remove('open'));
+  });
+}
 
 // About section terminal animation
 (function () {

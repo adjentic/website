@@ -579,8 +579,10 @@ footer {
   line-height: 1.7;
   color: var(--base0);
   height: 280px;
-  overflow: hidden;
+  overflow-y: scroll;
+  scrollbar-width: none;
 }
+.abt-body::-webkit-scrollbar { display: none; }
 
 #abt-lines .line   { display: block; white-space: pre-wrap; }
 #abt-lines .prompt { color: var(--green); font-weight: 700; }
