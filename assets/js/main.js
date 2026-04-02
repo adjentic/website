@@ -71,55 +71,63 @@ if (toggle && navLinks) {
 
     await delay(300);
 
-    await typedPrompt('./pipeline.sh --env production');
-    await delay(400);
+    function log(cls, text) {
+      linesEl.appendChild(span(cls, text));
+    }
 
-    linesEl.appendChild(span('', ''));
-    linesEl.appendChild(span('dim', '  [Pipeline] Starting build #142'));
+    log('dim',   '[Pipeline] Running on agent-01');
+    log('dim',   '[Pipeline] Workspace: /var/jenkins/workspace/deploy');
     await delay(500);
 
-    linesEl.appendChild(span('', ''));
-    linesEl.appendChild(span('result', '  \u25b6 Stage: Checkout'));
-    await delay(400);
-    linesEl.appendChild(span('check', '  \u2714 Cloning repository'));
+    log('', '');
+    log('result', '[Pipeline] Stage: Checkout');
     await delay(350);
-    linesEl.appendChild(span('check', '  \u2714 Resolved commit 4f9a2c1'));
+    log('cmd',  '+ git clone git@github.com:adjentic/app.git');
+    await delay(400);
+    log('cmd',  '+ git checkout 4f9a2c1');
+    await delay(300);
+    log('dim',  'HEAD is now at 4f9a2c1 fix: update IAM policy for Lambda');
     await delay(600);
 
-    linesEl.appendChild(span('', ''));
-    linesEl.appendChild(span('result', '  \u25b6 Stage: Test'));
-    await delay(400);
-    linesEl.appendChild(span('check', '  \u2714 Unit tests passed (47/47)'));
+    log('', '');
+    log('result', '[Pipeline] Stage: Test');
     await delay(350);
-    linesEl.appendChild(span('check', '  \u2714 Integration tests passed (12/12)'));
+    log('cmd',  '+ python -m pytest tests/ -q');
+    await delay(700);
+    log('dim',  '....................................');
+    await delay(300);
+    log('check', '47 passed in 3.21s');
     await delay(600);
 
-    linesEl.appendChild(span('', ''));
-    linesEl.appendChild(span('result', '  \u25b6 Stage: Build'));
-    await delay(400);
-    linesEl.appendChild(span('check', '  \u2714 Image built'));
+    log('', '');
+    log('result', '[Pipeline] Stage: Build');
     await delay(350);
-    linesEl.appendChild(span('check', '  \u2714 Pushed to registry'));
-    await delay(600);
-
-    linesEl.appendChild(span('', ''));
-    linesEl.appendChild(span('result', '  \u25b6 Stage: Deploy \u2192 production'));
+    log('cmd',  '+ docker build -t app:4f9a2c1 .');
+    await delay(800);
+    log('dim',  'Step 1/6 : FROM python:3.12-slim');
+    await delay(300);
+    log('dim',  'Step 6/6 : CMD ["gunicorn", "app:main"]');
+    await delay(400);
+    log('check', 'Successfully built a3f8b2d19c4e');
+    await delay(350);
+    log('cmd',  '+ docker push 123456.dkr.ecr.eu-west-1.amazonaws.com/app:4f9a2c1');
     await delay(500);
-    linesEl.appendChild(span('check', '  \u2714 Rolling deployment started'));
-    await delay(450);
-    linesEl.appendChild(span('check', '  \u2714 Health checks passed'));
-    await delay(450);
-    linesEl.appendChild(span('check', '  \u2714 Traffic switched'));
+    log('check', 'Pushed');
     await delay(600);
 
-    linesEl.appendChild(span('', ''));
-    const loadEl = span('dim', '  Build #142 deployed successfully');
-    linesEl.appendChild(loadEl);
+    log('', '');
+    log('result', '[Pipeline] Stage: Deploy');
+    await delay(350);
+    log('cmd',  '+ aws ecs update-service --force-new-deployment');
+    await delay(600);
+    log('dim',  'Waiting for service to stabilise');
+    await delay(800);
+    log('check', 'Service reached steady state');
+    await delay(400);
+    log('', '');
+    log('check', '[Pipeline] Finished: SUCCESS');
+    await delay(500);
     linesEl.appendChild(cursor);
-    await delay(600);
-
-    linesEl.appendChild(span('', ''));
-    await typedPrompt('');
 
   }
 
