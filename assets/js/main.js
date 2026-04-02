@@ -71,49 +71,55 @@ if (toggle && navLinks) {
 
     await delay(300);
 
-    // terraform plan
-    await typedPrompt('terraform plan');
+    await typedPrompt('./pipeline.sh --env production');
     await delay(400);
 
     linesEl.appendChild(span('', ''));
-    linesEl.appendChild(span('dim', '  Initialising modules...'));
-    await delay(500);
-    linesEl.appendChild(span('tool', '  \u25cf read_file \u2192 main.tf'));
-    await delay(350);
-    linesEl.appendChild(span('tool', '  \u25cf read_file \u2192 variables.tf'));
-    await delay(350);
-    linesEl.appendChild(span('tool', '  \u25cf aws_provider \u2192 eu-west-1'));
-    await delay(700);
-    linesEl.appendChild(span('', ''));
-    linesEl.appendChild(span('result', '  Plan: 4 to add, 1 to change, 0 to destroy.'));
-    await delay(800);
-    linesEl.appendChild(span('', ''));
-
-    // terraform apply
-    await typedPrompt('terraform apply --auto-approve');
+    linesEl.appendChild(span('dim', '  [Pipeline] Starting build #142'));
     await delay(500);
 
     linesEl.appendChild(span('', ''));
-    const resources = [
-      'aws_iam_role.ci_runner',
-      'aws_s3_bucket.artifacts',
-      'aws_lambda_function.cost_monitor',
-      'aws_cloudwatch_event_rule.daily',
-    ];
-    for (const r of resources) {
-      await delay(450);
-      linesEl.appendChild(span('check', '  \u2714 ' + r + ' \u2014 created'));
-    }
+    linesEl.appendChild(span('result', '  \u25b6 Stage: Checkout'));
+    await delay(400);
+    linesEl.appendChild(span('check', '  \u2714 Cloning repository'));
+    await delay(350);
+    linesEl.appendChild(span('check', '  \u2714 Resolved commit 4f9a2c1'));
     await delay(600);
-    linesEl.appendChild(span('', ''));
 
-    const loadEl = span('result', '  Apply complete');
+    linesEl.appendChild(span('', ''));
+    linesEl.appendChild(span('result', '  \u25b6 Stage: Test'));
+    await delay(400);
+    linesEl.appendChild(span('check', '  \u2714 Unit tests passed (47/47)'));
+    await delay(350);
+    linesEl.appendChild(span('check', '  \u2714 Integration tests passed (12/12)'));
+    await delay(600);
+
+    linesEl.appendChild(span('', ''));
+    linesEl.appendChild(span('result', '  \u25b6 Stage: Build'));
+    await delay(400);
+    linesEl.appendChild(span('check', '  \u2714 Image built'));
+    await delay(350);
+    linesEl.appendChild(span('check', '  \u2714 Pushed to registry'));
+    await delay(600);
+
+    linesEl.appendChild(span('', ''));
+    linesEl.appendChild(span('result', '  \u25b6 Stage: Deploy \u2192 production'));
+    await delay(500);
+    linesEl.appendChild(span('check', '  \u2714 Rolling deployment started'));
+    await delay(450);
+    linesEl.appendChild(span('check', '  \u2714 Health checks passed'));
+    await delay(450);
+    linesEl.appendChild(span('check', '  \u2714 Traffic switched'));
+    await delay(600);
+
+    linesEl.appendChild(span('', ''));
+    const loadEl = span('dim', '  Build #142 deployed successfully');
     linesEl.appendChild(loadEl);
     linesEl.appendChild(cursor);
-    for (let i = 0; i < 3; i++) {
-      await delay(400);
-      loadEl.textContent += '.';
-    }
+    await delay(600);
+
+    linesEl.appendChild(span('', ''));
+    await typedPrompt('');
 
   }
 
