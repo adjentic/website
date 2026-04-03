@@ -745,7 +745,7 @@ footer {
 
 /* --- Responsive --- */
 @media (max-width: 700px) {
-  .pipeline-view { flex-direction: column; }
+  .pipeline-view { flex-direction: column; margin-bottom: 3rem; }
   .stage-list { display: none; }
   .mobile-stage-indicator { display: flex; }
   .about-terminal { width: 100%; }
