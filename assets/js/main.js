@@ -15,7 +15,6 @@ if (toggle && navLinks) {
 // About section terminal animation
 (function () {
   const linesEl = document.getElementById('abt-lines');
-  const cursor  = document.getElementById('abt-cursor');
   let running = false;
 
   const abtBody = document.querySelector('.abt-body');
@@ -58,7 +57,6 @@ if (toggle && navLinks) {
     cmdEl.className = 'cmd';
     line.appendChild(promptEl);
     line.appendChild(cmdEl);
-    line.appendChild(cursor);
     linesEl.appendChild(line);
     return typeInto(cmdEl, cmd, 80);
   }
@@ -67,7 +65,6 @@ if (toggle && navLinks) {
     if (running) return;
     running = true;
     linesEl.innerHTML = '';
-    linesEl.appendChild(cursor);
 
     await delay(300);
 
@@ -192,7 +189,6 @@ if (toggle && navLinks) {
     }
 
     await delay(500);
-    linesEl.appendChild(cursor);
 
   }
 

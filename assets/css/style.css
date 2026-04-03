@@ -592,20 +592,6 @@ footer {
 #abt-lines .result { color: var(--cyan); }
 #abt-lines .dim    { color: var(--base01); }
 
-#abt-cursor {
-  display: inline-block;
-  width: 8px;
-  height: 1em;
-  background: var(--base0);
-  vertical-align: text-bottom;
-  animation: blink 1s step-end infinite;
-  margin-left: 2px;
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0; }
-}
 
 /* --- Divider --- */
 .divider {
