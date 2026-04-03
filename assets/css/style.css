@@ -566,7 +566,7 @@ footer {
 .pipeline-view {
   display: flex;
   gap: 1rem;
-  align-items: flex-start;
+  align-items: stretch;
   max-width: 680px;
   margin-top: 3rem;
 }
@@ -591,7 +591,7 @@ footer {
   color: var(--base01);
 }
 
-.stage-item.hidden { display: none; }
+.stage-item.hidden { opacity: 0; pointer-events: none; }
 
 .stage-status {
   width: 12px;
@@ -647,6 +647,8 @@ footer {
 .about-terminal {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
   border: 1px solid var(--border);
   border-radius: 5px;
   overflow: hidden;
@@ -659,7 +661,7 @@ footer {
   font-size: clamp(12px, 1.4vw, 13px);
   line-height: 1.7;
   color: var(--base0);
-  height: 320px;
+  flex: 1;
   overflow-y: scroll;
   scrollbar-width: none;
 }

@@ -22,7 +22,7 @@ if (toggle && navLinks) {
   function setStage(id, status) {
     const el = document.getElementById(id);
     if (!el) return;
-    if (status === 'show') { el.classList.remove('hidden'); return; }
+    if (status === 'show') { el.style.opacity = '1'; el.style.pointerEvents = ''; return; }
     el.className = 'stage-item ' + status;
   }
 
