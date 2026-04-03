@@ -146,18 +146,51 @@ if (toggle && navLinks) {
     await delay(400);
     log('dim',  '  aws_lambda_function.cost_monitor: Creating...');
     await delay(600);
-    log('check', '  aws_lambda_function.cost_monitor: Creation complete.');
-    await delay(400);
-    log('dim',  '  aws_cloudwatch_event_rule.daily: Creating...');
-    await delay(500);
-    log('check', '  aws_cloudwatch_event_rule.daily: Creation complete.');
-    await delay(600);
 
-    log('', '');
-    log('check', '  Apply complete! Resources: 2 added, 1 changed, 0 destroyed.');
-    await delay(400);
-    log('', '');
-    log('check', '[CI]Finished: SUCCESS');
+    const fail = Math.random() < 0.35;
+
+    if (fail) {
+      log('tool',  '  Error: ResourceNotFoundException: Function not found');
+      await delay(300);
+      log('tool',  '  Error applying plan. 1 error.');
+      await delay(500);
+      log('', '');
+      log('tool',  '[CI]Stage: Apply — FAILED');
+      await delay(600);
+
+      log('', '');
+      log('result', '[CI]Stage: Rollback');
+      await delay(400);
+      log('cmd',  '+ git revert HEAD --no-edit');
+      await delay(500);
+      log('dim',  'Revert "feat: add cost monitoring Lambda"');
+      await delay(400);
+      log('dim',  '1 file changed, 4 insertions(+), 12 deletions(-)');
+      await delay(500);
+      log('cmd',  '+ terraform apply -target=aws_iam_role.ci_runner');
+      await delay(700);
+      log('dim',  '  aws_iam_role.ci_runner: Reverting...');
+      await delay(500);
+      log('check', '  aws_iam_role.ci_runner: Revert complete.');
+      await delay(400);
+      log('result', '  Apply complete! Resources: 0 added, 1 changed, 1 destroyed.');
+      await delay(500);
+      log('', '');
+      log('tool',  '[CI]Finished: FAILURE (rolled back)');
+    } else {
+      log('check', '  aws_lambda_function.cost_monitor: Creation complete.');
+      await delay(400);
+      log('dim',  '  aws_cloudwatch_event_rule.daily: Creating...');
+      await delay(500);
+      log('check', '  aws_cloudwatch_event_rule.daily: Creation complete.');
+      await delay(600);
+      log('', '');
+      log('check', '  Apply complete! Resources: 2 added, 1 changed, 0 destroyed.');
+      await delay(400);
+      log('', '');
+      log('check', '[CI]Finished: SUCCESS');
+    }
+
     await delay(500);
     linesEl.appendChild(cursor);
 
