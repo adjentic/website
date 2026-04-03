@@ -57,11 +57,14 @@
       <div class="pipeline-view">
         <ul class="stage-list" id="stageList">
           <li class="stage-item pending" id="stage-checkout"><span class="stage-status"></span><span class="stage-name">Checkout</span></li>
-          <li class="stage-item pending" id="stage-validate"><span class="stage-status"></span><span class="stage-name">Validate</span></li>
-          <li class="stage-item pending" id="stage-fmt"><span class="stage-status"></span><span class="stage-name">Format</span></li>
-          <li class="stage-item pending" id="stage-changes"><span class="stage-status"></span><span class="stage-name">Changes</span></li>
-          <li class="stage-item pending" id="stage-plan"><span class="stage-status"></span><span class="stage-name">Plan</span></li>
-          <li class="stage-item pending" id="stage-apply"><span class="stage-status"></span><span class="stage-name">Apply</span></li>
+          <li class="stage-item pending" id="stage-test"><span class="stage-status"></span><span class="stage-name">Test</span></li>
+          <li class="stage-item pending" id="stage-package"><span class="stage-status"></span><span class="stage-name">Package</span></li>
+          <li class="stage-item pending" id="stage-s3"><span class="stage-status"></span><span class="stage-name">S3 Upload</span></li>
+          <li class="stage-item pending" id="stage-lambda"><span class="stage-status"></span><span class="stage-name">Lambda</span></li>
+          <li class="stage-item pending" id="stage-apigw"><span class="stage-status"></span><span class="stage-name">API Gateway</span></li>
+          <li class="stage-item pending" id="stage-tfvalidate"><span class="stage-status"></span><span class="stage-name">Tf Validate</span></li>
+          <li class="stage-item pending" id="stage-tfplan"><span class="stage-status"></span><span class="stage-name">Tf Plan</span></li>
+          <li class="stage-item pending" id="stage-tfapply"><span class="stage-status"></span><span class="stage-name">Tf Apply</span></li>
           <li class="stage-item hidden"  id="stage-rollback"><span class="stage-status"></span><span class="stage-name">Rollback</span></li>
         </ul>
 

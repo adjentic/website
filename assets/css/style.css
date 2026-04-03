@@ -573,7 +573,7 @@ footer {
 
 .stage-list {
   list-style: none;
-  width: 130px;
+  width: 145px;
   flex-shrink: 0;
   background: var(--bg-alt);
   border: 1px solid var(--border);
