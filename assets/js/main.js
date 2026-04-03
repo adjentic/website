@@ -75,12 +75,12 @@ if (toggle && navLinks) {
       linesEl.appendChild(span(cls, text));
     }
 
-    log('dim',   '[Pipeline] Running on agent-01');
-    log('dim',   '[Pipeline] Workspace: /var/jenkins/workspace/infra-deploy');
+    log('dim',   '[CI]Running on agent-01');
+    log('dim',   '[CI]Workspace: /var/ci/workspace/infra-deploy');
     await delay(500);
 
     log('', '');
-    log('result', '[Pipeline] Stage: Checkout');
+    log('result', '[CI]Stage: Checkout');
     await delay(350);
     log('cmd',  '+ git checkout 4f9a2c1');
     await delay(300);
@@ -88,7 +88,7 @@ if (toggle && navLinks) {
     await delay(600);
 
     log('', '');
-    log('result', '[Pipeline] Stage: Validate');
+    log('result', '[CI]Stage: Validate');
     await delay(350);
     log('cmd',  '+ terraform validate');
     await delay(700);
@@ -96,7 +96,7 @@ if (toggle && navLinks) {
     await delay(600);
 
     log('', '');
-    log('result', '[Pipeline] Stage: Format Check');
+    log('result', '[CI]Stage: Format Check');
     await delay(350);
     log('cmd',  '+ terraform fmt -check -recursive');
     await delay(500);
@@ -108,7 +108,7 @@ if (toggle && navLinks) {
     await delay(600);
 
     log('', '');
-    log('result', '[Pipeline] Stage: Detect Changes');
+    log('result', '[CI]Stage: Detect Changes');
     await delay(350);
     log('cmd',  '+ git diff HEAD~1 --name-only -- "*.tf"');
     await delay(500);
@@ -122,7 +122,7 @@ if (toggle && navLinks) {
     await delay(600);
 
     log('', '');
-    log('result', '[Pipeline] Stage: Plan');
+    log('result', '[CI]Stage: Plan');
     await delay(350);
     log('cmd',  '+ terraform plan -out=tfplan');
     await delay(800);
@@ -136,7 +136,7 @@ if (toggle && navLinks) {
     await delay(600);
 
     log('', '');
-    log('result', '[Pipeline] Stage: Apply');
+    log('result', '[CI]Stage: Apply');
     await delay(350);
     log('cmd',  '+ terraform apply tfplan');
     await delay(600);
@@ -157,7 +157,7 @@ if (toggle && navLinks) {
     log('check', '  Apply complete! Resources: 2 added, 1 changed, 0 destroyed.');
     await delay(400);
     log('', '');
-    log('check', '[Pipeline] Finished: SUCCESS');
+    log('check', '[CI]Finished: SUCCESS');
     await delay(500);
     linesEl.appendChild(cursor);
 
