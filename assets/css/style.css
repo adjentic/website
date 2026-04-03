@@ -566,7 +566,7 @@ footer {
 .pipeline-view {
   display: flex;
   gap: 1rem;
-  align-items: stretch;
+  align-items: flex-start;
   max-width: 680px;
   margin-top: 3rem;
 }
@@ -574,6 +574,7 @@ footer {
 .stage-list {
   list-style: none;
   width: 145px;
+  height: 340px;
   flex-shrink: 0;
   background: var(--bg-alt);
   border: 1px solid var(--border);
@@ -647,8 +648,6 @@ footer {
 .about-terminal {
   flex: 1;
   min-width: 0;
-  display: flex;
-  flex-direction: column;
   border: 1px solid var(--border);
   border-radius: 5px;
   overflow: hidden;
@@ -661,7 +660,7 @@ footer {
   font-size: clamp(12px, 1.4vw, 13px);
   line-height: 1.7;
   color: var(--base0);
-  flex: 1;
+  height: 340px;
   overflow-y: scroll;
   scrollbar-width: none;
 }
