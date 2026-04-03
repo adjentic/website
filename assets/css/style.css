@@ -562,10 +562,92 @@ footer {
 .footer-links a { color: var(--text-dim); }
 .footer-links a:hover { color: var(--accent); }
 
+/* --- Pipeline view --- */
+.pipeline-view {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  max-width: 680px;
+  margin-top: 3rem;
+}
+
+.stage-list {
+  list-style: none;
+  width: 130px;
+  flex-shrink: 0;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 0.6rem 0;
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  align-self: stretch;
+}
+
+.stage-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.75rem;
+  color: var(--base01);
+}
+
+.stage-item.hidden { display: none; }
+
+.stage-status {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid var(--base01);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.stage-item.running .stage-status {
+  border-color: var(--yellow);
+  background: rgba(181, 137, 0, 0.25);
+  animation: stagepulse 0.9s ease-in-out infinite alternate;
+}
+.stage-item.running .stage-name { color: var(--yellow); }
+
+.stage-item.success .stage-status {
+  border-color: var(--green);
+  background: var(--green);
+}
+.stage-item.success .stage-status::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: var(--bg-alt);
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+.stage-item.success .stage-name { color: var(--green); }
+
+.stage-item.failed .stage-status {
+  border-color: var(--red);
+  background: var(--red);
+}
+.stage-item.failed .stage-status::after {
+  content: '✕';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 8px;
+  color: var(--bg-alt);
+  line-height: 1;
+}
+.stage-item.failed .stage-name { color: var(--red); }
+
+@keyframes stagepulse {
+  from { opacity: 0.4; }
+  to   { opacity: 1; }
+}
+
 /* --- Terminal widget --- */
 .about-terminal {
-  max-width: 480px;
-  margin-top: 3rem;
+  flex: 1;
+  min-width: 0;
   border: 1px solid var(--border);
   border-radius: 5px;
   overflow: hidden;
@@ -602,6 +684,10 @@ footer {
 
 /* --- Responsive --- */
 @media (max-width: 700px) {
+  .pipeline-view { flex-direction: column; }
+  .stage-list { width: 100%; display: flex; flex-wrap: wrap; gap: 0; padding: 0.4rem; }
+  .stage-item { width: auto; flex: 1 1 auto; padding: 0.3rem 0.5rem; }
+
   .nav-links { display: none; }
   .nav-links.open {
     display: flex;

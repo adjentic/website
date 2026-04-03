@@ -54,17 +54,29 @@
         <a href="#services" class="btn btn-outline">View services</a>
       </div>
 
-      <div class="about-terminal">
-        <div class="tb-bar">
-          <span class="tb-title">bash</span>
-          <div class="tb-controls">
-            <span class="tb-btn">&#8722;</span>
-            <span class="tb-btn">&#9723;</span>
-            <span class="tb-btn">&#10005;</span>
+      <div class="pipeline-view">
+        <ul class="stage-list" id="stageList">
+          <li class="stage-item pending" id="stage-checkout"><span class="stage-status"></span><span class="stage-name">Checkout</span></li>
+          <li class="stage-item pending" id="stage-validate"><span class="stage-status"></span><span class="stage-name">Validate</span></li>
+          <li class="stage-item pending" id="stage-fmt"><span class="stage-status"></span><span class="stage-name">Format</span></li>
+          <li class="stage-item pending" id="stage-changes"><span class="stage-status"></span><span class="stage-name">Changes</span></li>
+          <li class="stage-item pending" id="stage-plan"><span class="stage-status"></span><span class="stage-name">Plan</span></li>
+          <li class="stage-item pending" id="stage-apply"><span class="stage-status"></span><span class="stage-name">Apply</span></li>
+          <li class="stage-item hidden"  id="stage-rollback"><span class="stage-status"></span><span class="stage-name">Rollback</span></li>
+        </ul>
+
+        <div class="about-terminal">
+          <div class="tb-bar">
+            <span class="tb-title">bash</span>
+            <div class="tb-controls">
+              <span class="tb-btn">&#8722;</span>
+              <span class="tb-btn">&#9723;</span>
+              <span class="tb-btn">&#10005;</span>
+            </div>
           </div>
-        </div>
-        <div class="abt-body">
-          <div id="abt-lines"></div>
+          <div class="abt-body">
+            <div id="abt-lines"></div>
+          </div>
         </div>
       </div>
 

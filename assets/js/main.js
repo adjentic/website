@@ -19,6 +19,13 @@ if (toggle && navLinks) {
 
   const abtBody = document.querySelector('.abt-body');
 
+  function setStage(id, status) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (status === 'show') { el.classList.remove('hidden'); return; }
+    el.className = 'stage-item ' + status;
+  }
+
   function span(cls, text) {
     const s = document.createElement('span');
     s.className = 'line ' + cls;
@@ -78,22 +85,27 @@ if (toggle && navLinks) {
 
     log('', '');
     log('result', '[CI]Stage: Checkout');
+    setStage('stage-checkout', 'running');
     await delay(350);
     log('cmd',  '+ git checkout 4f9a2c1');
     await delay(300);
     log('dim',  'HEAD is now at 4f9a2c1 feat: add cost monitoring Lambda');
     await delay(600);
+    setStage('stage-checkout', 'success');
 
     log('', '');
     log('result', '[CI]Stage: Validate');
+    setStage('stage-validate', 'running');
     await delay(350);
     log('cmd',  '+ terraform validate');
     await delay(700);
     log('check', 'Success! The configuration is valid.');
     await delay(600);
+    setStage('stage-validate', 'success');
 
     log('', '');
     log('result', '[CI]Stage: Format Check');
+    setStage('stage-fmt', 'running');
     await delay(350);
     log('cmd',  '+ terraform fmt -check -recursive');
     await delay(500);
@@ -103,9 +115,11 @@ if (toggle && navLinks) {
     await delay(300);
     log('check', 'All files formatted correctly.');
     await delay(600);
+    setStage('stage-fmt', 'success');
 
     log('', '');
     log('result', '[CI]Stage: Detect Changes');
+    setStage('stage-changes', 'running');
     await delay(350);
     log('cmd',  '+ git diff HEAD~1 --name-only -- "*.tf"');
     await delay(500);
@@ -117,9 +131,11 @@ if (toggle && navLinks) {
     await delay(400);
     log('result', '3 file(s) changed. Proceeding with plan.');
     await delay(600);
+    setStage('stage-changes', 'success');
 
     log('', '');
     log('result', '[CI]Stage: Plan');
+    setStage('stage-plan', 'running');
     await delay(350);
     log('cmd',  '+ terraform plan -out=tfplan');
     await delay(800);
@@ -131,9 +147,11 @@ if (toggle && navLinks) {
     await delay(500);
     log('result', '  Plan: 2 to add, 1 to change, 0 to destroy.');
     await delay(600);
+    setStage('stage-plan', 'success');
 
     log('', '');
     log('result', '[CI]Stage: Apply');
+    setStage('stage-apply', 'running');
     await delay(350);
     log('cmd',  '+ terraform apply tfplan');
     await delay(600);
@@ -147,6 +165,7 @@ if (toggle && navLinks) {
     const fail = Math.random() < 0.35;
 
     if (fail) {
+      setStage('stage-apply', 'failed');
       log('tool',  '  Error: ResourceNotFoundException: Function not found');
       await delay(300);
       log('tool',  '  Error applying plan. 1 error.');
@@ -157,6 +176,8 @@ if (toggle && navLinks) {
 
       log('', '');
       log('result', '[CI]Stage: Rollback');
+      setStage('stage-rollback', 'show');
+      setStage('stage-rollback', 'running');
       await delay(400);
       log('cmd',  '+ git revert HEAD --no-edit');
       await delay(500);
@@ -172,6 +193,7 @@ if (toggle && navLinks) {
       await delay(400);
       log('result', '  Apply complete! Resources: 0 added, 1 changed, 1 destroyed.');
       await delay(500);
+      setStage('stage-rollback', 'success');
       log('', '');
       log('tool',  '[CI]Finished: FAILURE (rolled back)');
     } else {
@@ -181,6 +203,7 @@ if (toggle && navLinks) {
       await delay(500);
       log('check', '  aws_cloudwatch_event_rule.daily: Creation complete.');
       await delay(600);
+      setStage('stage-apply', 'success');
       log('', '');
       log('check', '  Apply complete! Resources: 2 added, 1 changed, 0 destroyed.');
       await delay(400);
