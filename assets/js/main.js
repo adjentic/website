@@ -19,11 +19,34 @@ if (toggle && navLinks) {
 
   const abtBody = document.querySelector('.abt-body');
 
+  const mobileIndicator = document.getElementById('mobileStageIndicator');
+
+  function updateMobileIndicator(el, status) {
+    if (!mobileIndicator) return;
+    mobileIndicator.className = 'mobile-stage-indicator ' + status;
+    mobileIndicator.querySelector('.mobile-stage-label').textContent = el.querySelector('.stage-name').textContent;
+  }
+
   function setStage(id, status) {
     const el = document.getElementById(id);
     if (!el) return;
     if (status === 'show') { el.style.opacity = '1'; el.style.pointerEvents = ''; return; }
+    const wasMobileActive = el.classList.contains('mobile-active');
     el.className = 'stage-item ' + status;
+    if (status === 'running') {
+      // Promote current active → prev, evict oldest if more than 2 prev exist
+      document.querySelectorAll('.stage-item.mobile-active').forEach(s => {
+        s.classList.remove('mobile-active');
+        s.classList.add('mobile-prev');
+      });
+      const prevItems = document.querySelectorAll('.stage-item.mobile-prev');
+      if (prevItems.length > 2) prevItems[0].classList.remove('mobile-prev');
+      el.classList.add('mobile-active');
+      updateMobileIndicator(el, status);
+    } else if (wasMobileActive) {
+      el.classList.add('mobile-active');
+      updateMobileIndicator(el, status);
+    }
   }
 
   function span(cls, text) {
@@ -68,6 +91,21 @@ if (toggle && navLinks) {
     return typeInto(cmdEl, cmd, 80);
   }
 
+  const stageIds = ['stage-checkout','stage-test','stage-package','stage-s3','stage-lambda','stage-apigw','stage-tfvalidate','stage-tfplan','stage-tfapply'];
+
+  function reset() {
+    running = false;
+    linesEl.innerHTML = '';
+    stageIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.className = 'stage-item pending';
+    });
+    if (mobileIndicator) {
+      mobileIndicator.className = 'mobile-stage-indicator';
+      mobileIndicator.querySelector('.mobile-stage-label').textContent = '';
+    }
+  }
+
   async function run() {
     if (running) return;
     running = true;
@@ -79,13 +117,13 @@ if (toggle && navLinks) {
       linesEl.appendChild(span(cls, text));
     }
 
-    log('dim', '[CI]Running on agent-01');
-    log('dim', '[CI]Workspace: /var/ci/workspace/api-deploy');
+    log('dim', '[CI/CD]Running on agent-01');
+    log('dim', '[CI/CD]Workspace: /var/ci/workspace/api-deploy');
     await delay(500);
 
     // Checkout
     log('', '');
-    log('result', '[CI]Stage: Checkout');
+    log('result', '[CI/CD]Stage: Checkout');
     setStage('stage-checkout', 'running');
     await delay(350);
     log('cmd', '+ git checkout 4f9a2c1');
@@ -96,7 +134,7 @@ if (toggle && navLinks) {
 
     // Test
     log('', '');
-    log('result', '[CI]Stage: Test');
+    log('result', '[CI/CD]Stage: Test');
     setStage('stage-test', 'running');
     await delay(350);
     log('cmd', '+ npm ci');
@@ -117,7 +155,7 @@ if (toggle && navLinks) {
 
     // Package
     log('', '');
-    log('result', '[CI]Stage: Package');
+    log('result', '[CI/CD]Stage: Package');
     setStage('stage-package', 'running');
     await delay(350);
     log('cmd', '+ npm run build');
@@ -134,7 +172,7 @@ if (toggle && navLinks) {
 
     // S3 Upload
     log('', '');
-    log('result', '[CI]Stage: S3 Upload');
+    log('result', '[CI/CD]Stage: S3 Upload');
     setStage('stage-s3', 'running');
     await delay(350);
     log('cmd', '+ aws s3 cp function.zip s3://adjentic-0904c3ea/builds/4f9a2c1/function.zip');
@@ -145,7 +183,7 @@ if (toggle && navLinks) {
 
     // Lambda
     log('', '');
-    log('result', '[CI]Stage: Lambda');
+    log('result', '[CI/CD]Stage: Lambda');
     setStage('stage-lambda', 'running');
     await delay(350);
     log('cmd', '+ aws lambda update-function-code \\');
@@ -161,7 +199,7 @@ if (toggle && navLinks) {
 
     // API Gateway
     log('', '');
-    log('result', '[CI]Stage: API Gateway');
+    log('result', '[CI/CD]Stage: API Gateway');
     setStage('stage-apigw', 'running');
     await delay(350);
     log('cmd', '+ aws apigateway create-deployment \\');
@@ -174,7 +212,7 @@ if (toggle && navLinks) {
 
     // Terraform Validate + fmt
     log('', '');
-    log('result', '[CI]Stage: Tf Validate');
+    log('result', '[CI/CD]Stage: Tf Validate');
     setStage('stage-tfvalidate', 'running');
     await delay(350);
     log('cmd', '+ terraform validate');
@@ -182,69 +220,59 @@ if (toggle && navLinks) {
     log('check', '  Success! The configuration is valid.');
     await delay(350);
     log('cmd', '+ terraform fmt -check -recursive');
-    await delay(500);
+    await delay(700);
     log('check', '  All files formatted correctly.');
     await delay(500);
     setStage('stage-tfvalidate', 'success');
 
     // Terraform Plan
     log('', '');
-    log('result', '[CI]Stage: Tf Plan');
+    log('result', '[CI/CD]Stage: Tf Plan');
     setStage('stage-tfplan', 'running');
     await delay(350);
     log('cmd', '+ terraform plan -out=tfplan');
     await delay(700);
-    log('dim', '  ~ aws_lambda_function.api_handler');
-    await delay(300);
-    log('dim', '  ~ aws_api_gateway_stage.prod');
-    await delay(500);
-    log('result', '  Plan: 0 to add, 2 to change, 0 to destroy.');
-    await delay(600);
-    setStage('stage-tfplan', 'success');
 
-    // Terraform Apply (with random failure)
-    log('', '');
-    log('result', '[CI]Stage: Tf Apply');
-    setStage('stage-tfapply', 'running');
-    await delay(350);
-    log('cmd', '+ terraform apply tfplan');
-    await delay(600);
-    log('dim', '  aws_lambda_function.api_handler: Modifying...');
-    await delay(600);
+    const failPlan = Math.random() < 0.3;
 
-    const fail = Math.random() < 0.35;
-
-    if (fail) {
-      setStage('stage-tfapply', 'failed');
-      log('tool', '  Error: AccessDeniedException: User is not authorized');
+    if (failPlan) {
+      log('tool', '  Error: Error locking state: Error acquiring the state lock');
       await delay(300);
-      log('tool', '  Error applying plan. 1 error.');
-      await delay(500);
-      log('', '');
-      log('tool', '[CI]Stage: Tf Apply — FAILED');
-      await delay(600);
-
-      log('', '');
-      log('result', '[CI]Stage: Rollback');
-      setStage('stage-rollback', 'show');
-      setStage('stage-rollback', 'running');
+      log('tool', '  Lock Info:');
+      await delay(150);
+      log('dim',  '    ID:        b7e3a2f1-04cd-4812-9c3e-d1f8a0e29b55');
+      await delay(150);
+      log('dim',  '    Path:      adjentic-tfstate/api-deploy.tfstate');
+      await delay(150);
+      log('dim',  '    Operation: plan');
+      await delay(150);
+      log('dim',  '    Who:       ci@agent-02');
       await delay(400);
-      log('cmd', '+ aws lambda update-function-code \\');
-      log('dim', '    --function-name api-handler \\');
-      log('dim', '    --s3-key builds/prev/function.zip');
-      await delay(700);
-      log('check', '  Function rolled back to previous version.');
+      log('tool', '  Error: Failed to acquire lock. Another plan may be in progress.');
       await delay(400);
-      log('cmd', '+ terraform apply -target=aws_lambda_function.api_handler');
-      await delay(700);
-      log('dim', '  aws_lambda_function.api_handler: Reverting...');
-      await delay(500);
-      log('check', '  aws_lambda_function.api_handler: Revert complete.');
-      await delay(400);
-      setStage('stage-rollback', 'success');
+      setStage('stage-tfplan', 'failed');
       log('', '');
-      log('tool', '[CI]Finished: FAILURE (rolled back)');
+      log('tool', '[CI/CD]Stage: Tf Plan — FAILED');
+      await delay(400);
+      log('tool', '[CI/CD]Finished: FAILURE');
     } else {
+      log('dim', '  ~ aws_lambda_function.api_handler');
+      await delay(300);
+      log('dim', '  ~ aws_api_gateway_stage.prod');
+      await delay(500);
+      log('result', '  Plan: 0 to add, 2 to change, 0 to destroy.');
+      await delay(600);
+      setStage('stage-tfplan', 'success');
+
+      // Terraform Apply
+      log('', '');
+      log('result', '[CI/CD]Stage: Tf Apply');
+      setStage('stage-tfapply', 'running');
+      await delay(350);
+      log('cmd', '+ terraform apply tfplan');
+      await delay(600);
+      log('dim', '  aws_lambda_function.api_handler: Modifying...');
+      await delay(600);
       log('check', '  aws_lambda_function.api_handler: Modifications complete.');
       await delay(400);
       log('dim', '  aws_api_gateway_stage.prod: Modifying...');
@@ -256,11 +284,17 @@ if (toggle && navLinks) {
       log('check', '  Apply complete! Resources: 0 added, 2 changed, 0 destroyed.');
       await delay(400);
       log('', '');
-      log('check', '[CI]Finished: SUCCESS');
+      log('check', '[CI/CD]Finished: SUCCESS');
     }
 
     await delay(500);
 
+  }
+
+  // Re-run button
+  const rerunBtn = document.getElementById('pipelineRerun');
+  if (rerunBtn) {
+    rerunBtn.addEventListener('click', () => { reset(); setTimeout(run, 200); });
   }
 
   // Start on page load after a short delay

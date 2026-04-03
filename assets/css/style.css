@@ -563,11 +563,72 @@ footer {
 .footer-links a:hover { color: var(--accent); }
 
 /* --- Pipeline view --- */
+.abt-footer {
+  border-top: 1px solid var(--border);
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-alt);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.mobile-stage-indicator {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  color: var(--base01);
+  flex: 1;
+  min-width: 0;
+}
+.mobile-stage-indicator .stage-status {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid var(--base01);
+  flex-shrink: 0;
+  position: relative;
+}
+.mobile-stage-indicator.running .stage-status {
+  border-color: var(--yellow);
+  background: rgba(181,137,0,0.25);
+  animation: stagepulse 0.9s ease-in-out infinite alternate;
+}
+.mobile-stage-indicator.running { color: var(--yellow); }
+.mobile-stage-indicator.success .stage-status {
+  border-color: var(--green);
+  background: var(--green);
+}
+.mobile-stage-indicator.success { color: var(--green); }
+.mobile-stage-indicator.failed .stage-status {
+  border-color: var(--red);
+  background: var(--red);
+}
+.mobile-stage-indicator.failed { color: var(--red); }
+
+.rerun-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--base01);
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+.rerun-btn:hover {
+  color: var(--base1);
+  border-color: var(--base1);
+}
+
 .pipeline-view {
   display: flex;
   gap: 1rem;
   align-items: flex-start;
-  max-width: 680px;
+  max-width: 645px;
   margin-top: 3rem;
 }
 
@@ -646,8 +707,8 @@ footer {
 
 /* --- Terminal widget --- */
 .about-terminal {
-  flex: 1;
-  min-width: 0;
+  width: 480px;
+  flex-shrink: 0;
   border: 1px solid var(--border);
   border-radius: 5px;
   overflow: hidden;
@@ -685,8 +746,10 @@ footer {
 /* --- Responsive --- */
 @media (max-width: 700px) {
   .pipeline-view { flex-direction: column; }
-  .stage-list { width: 100%; display: flex; flex-wrap: wrap; gap: 0; padding: 0.4rem; }
-  .stage-item { width: auto; flex: 1 1 auto; padding: 0.3rem 0.5rem; }
+  .stage-list { display: none; }
+  .mobile-stage-indicator { display: flex; }
+  .about-terminal { width: 100%; }
+  .abt-body { height: 260px; font-size: 12px; }
 
   .nav-links { display: none; }
   .nav-links.open {
@@ -711,4 +774,9 @@ footer {
   .section { padding: 3.5rem 0; }
 
   .process-steps { grid-template-columns: 1fr; }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .abt-body { height: 300px; }
+  .pipeline-view { margin-bottom: 2rem; }
 }

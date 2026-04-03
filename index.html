@@ -65,12 +65,18 @@
           <li class="stage-item pending" id="stage-tfvalidate"><span class="stage-status"></span><span class="stage-name">Tf Validate</span></li>
           <li class="stage-item pending" id="stage-tfplan"><span class="stage-status"></span><span class="stage-name">Tf Plan</span></li>
           <li class="stage-item pending" id="stage-tfapply"><span class="stage-status"></span><span class="stage-name">Tf Apply</span></li>
-          <li class="stage-item hidden"  id="stage-rollback"><span class="stage-status"></span><span class="stage-name">Rollback</span></li>
         </ul>
 
         <div class="about-terminal">
           <div class="abt-body">
             <div id="abt-lines"></div>
+          </div>
+          <div class="abt-footer">
+            <div class="mobile-stage-indicator" id="mobileStageIndicator">
+              <span class="stage-status"></span>
+              <span class="mobile-stage-label"></span>
+            </div>
+            <button id="pipelineRerun" class="rerun-btn">&#9654; Re-run job</button>
           </div>
         </div>
       </div>
