@@ -23,9 +23,9 @@
   --bg:       var(--base03);
   --bg-alt:   var(--base02);
   --border:   #0d4454;
-  --text:     var(--base0);
-  --text-dim: var(--base01);
-  --text-em:  var(--base1);
+  --text:     var(--base1);
+  --text-dim: var(--base00);
+  --text-em:  var(--base2);
   --accent:   var(--cyan);
   --accent2:  var(--blue);
 }
@@ -154,7 +154,8 @@ nav {
   min-height: 100vh;
   display: flex;
   align-items: center;
-  padding-top: 3.5rem;
+  padding-top: 6rem;
+  padding-bottom: 5rem;
   position: relative;
   overflow: hidden;
 }
@@ -193,7 +194,7 @@ nav {
 }
 
 .hero-desc {
-  color: var(--base00);
+  color: var(--base0);
   max-width: 540px;
   margin-bottom: 2.5rem;
   line-height: 1.8;
@@ -339,7 +340,7 @@ nav {
 
 .service-desc {
   font-size: 0.85rem;
-  color: var(--base00);
+  color: var(--base0);
   line-height: 1.75;
 }
 
@@ -376,7 +377,7 @@ nav {
 }
 
 .about-body {
-  color: var(--base00);
+  color: var(--base0);
   line-height: 1.8;
   margin-bottom: 1rem;
 }
@@ -461,7 +462,7 @@ nav {
 
 .step-desc {
   font-size: 0.83rem;
-  color: var(--base00);
+  color: var(--base0);
   line-height: 1.7;
 }
 
@@ -474,7 +475,7 @@ nav {
 }
 
 .contact-intro {
-  color: var(--base00);
+  color: var(--base0);
   line-height: 1.8;
   margin-bottom: 1.5rem;
 }
